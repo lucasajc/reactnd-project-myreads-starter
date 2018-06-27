@@ -14,13 +14,51 @@ class BooksApp extends React.Component {
      * pages, as well as provide a good URL they can bookmark and share.
      */
      books: [],
-     showSearchPage: false
+     searchResults: []
   }
 
   componentDidMount() {
     BooksAPI.getAll().then((books) => {
       this.setState({ books })
     })
+  }
+/*
+  updateBookShelf = (id,shelf) => {
+    this.setState((state) => ({
+      books: state.books.map((b)=>{
+        if(b.id===id){
+          b.shelf = shelf;
+        }
+        return b;
+      })
+    }))
+  }
+*/
+  updateBookShelf = (id,shelf) => {
+    BooksAPI.get(id).then((book)=>{
+      BooksAPI.update(book, shelf).then(() => {
+        book.shelf = shelf;
+        this.setState(state => ({
+          books: state.books.filter(b => b.id !== book.id).concat([book])
+        }))
+      });
+    })
+  }
+
+  getSearchResults = (query) =>{
+    BooksAPI.search(query).then((result) => {
+      if(result===undefined){
+        this.setState({searchResults: [] });
+      }
+      else{
+        if(!result.error)
+          this.setState({searchResults: result})
+        else
+          this.setState({searchResults: [] });
+      }
+      
+    });
+    //console.log(this.state.searchResults);
   }
 
   render() {
@@ -30,10 +68,13 @@ class BooksApp extends React.Component {
         <Route exact path='/' render={() => (
             <ListShelves
               books={this.state.books}
+              onChangeBookShelf={this.updateBookShelf}
             />
           )}/>
         <Route path='/search' render={() => (
             <SearchBooks
+              onSearch={this.getSearchResults}
+              searchResults={this.state.searchResults}
             />
         )}/>
       </div>
