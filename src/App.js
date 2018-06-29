@@ -14,67 +14,70 @@ class BooksApp extends React.Component {
      * pages, as well as provide a good URL they can bookmark and share.
      */
      books: [],
-     searchResults: []
+     searchResults: [],
+     loading: true
   }
 
   componentDidMount() {
     BooksAPI.getAll().then((books) => {
       this.setState({ books })
+      this.setState({ loading: false });
     })
   }
-/*
+
+  
+
   updateBookShelf = (id,shelf) => {
-    this.setState((state) => ({
-      books: state.books.map((b)=>{
-        if(b.id===id){
-          b.shelf = shelf;
-        }
-        return b;
-      })
-    }))
-  }
-*/
-  updateBookShelf = (id,shelf) => {
+    this.setState({ loading: true });
     BooksAPI.get(id).then((book)=>{
       BooksAPI.update(book, shelf).then(() => {
         book.shelf = shelf;
         this.setState(state => ({
           books: state.books.filter(b => b.id !== book.id).concat([book])
         }))
+        this.setState(state => ({
+          searchResults: state.searchResults.filter((b) => b.id !== book.id)
+        }))
       });
-    })
+    }).then(() => this.setState({ loading: false }))
   }
-
+  
   getSearchResults = (query) =>{
     BooksAPI.search(query).then((result) => {
-      if(result===undefined){
-        this.setState({searchResults: [] });
+      if(result!==undefined){
+        if(!result.error){
+          result.forEach(obj =>{
+            obj.shelf = 'none'; 
+          });
+          this.setState({searchResults: result})
+        }
+        else{
+          this.setState({searchResults: [] });
+        }
       }
       else{
-        if(!result.error)
-          this.setState({searchResults: result})
-        else
-          this.setState({searchResults: [] });
+        this.setState({searchResults: [] })
       }
-      
-    });
-    //console.log(this.state.searchResults);
+    }).catch(this.setState({searchResults: [] }));
   }
 
+
   render() {
-    //console.log(this.state.books);
     return (
       <div className="app">
         <Route exact path='/' render={() => (
             <ListShelves
               books={this.state.books}
               onChangeBookShelf={this.updateBookShelf}
+              loading={this.state.loading}
             />
           )}/>
         <Route path='/search' render={() => (
             <SearchBooks
               onSearch={this.getSearchResults}
               searchResults={this.state.searchResults}
+              onChangeBookShelf={this.updateBookShelf}
+              loading={this.state.loading}
             />
         )}/>
       </div>
