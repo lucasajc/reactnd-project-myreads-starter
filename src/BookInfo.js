@@ -1,8 +1,15 @@
 import React from 'react';
+import StarRatingComponent from 'react-star-rating-component';
 
 class BookInfo extends React.Component {
 
-  
+  state = {
+      rating: 0
+  };
+
+  onStarClick(nextValue, prevValue, name) {
+    this.setState({rating: nextValue});
+  }
 
   handleChange = (e) => {
     e.preventDefault();
@@ -13,6 +20,7 @@ class BookInfo extends React.Component {
 	render(){
 
     const {book} = this.props;
+    const { rating } = this.state;
 
 		return (
                         
@@ -34,6 +42,14 @@ class BookInfo extends React.Component {
                                 </select>
                               </div>
                             </div>
+                            <div className="star" style={{fontSize: 30}}>
+                              <StarRatingComponent 
+                                name="rate" 
+                                starCount={5}
+                                value={book.averageRating}
+                                onStarClick={this.onStarClick.bind(this)}
+                              />
+                            </div>
                             <div className="book-title">{book.title}</div>
                             <div className="book-authors">
                               {book.authors === undefined ? '' :book.authors.map((author)=> (`${author}`))}
@@ -43,5 +59,4 @@ class BookInfo extends React.Component {
 	}
 
 }
-
 export default BookInfo;

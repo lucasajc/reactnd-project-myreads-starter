@@ -20,6 +20,12 @@ class BooksApp extends React.Component {
 
   componentDidMount() {
     BooksAPI.getAll().then((books) => {
+
+      books.forEach(obj =>{
+      if(obj.averageRating===undefined)
+        obj.averageRating = 0; 
+      });
+
       this.setState({ books })
       this.setState({ loading: false });
     })
@@ -47,7 +53,9 @@ class BooksApp extends React.Component {
       if(result!==undefined){
         if(!result.error){
           result.forEach(obj =>{
-            obj.shelf = 'none'; 
+            obj.shelf = 'none';
+            if(obj.averageRating===undefined)
+              obj.averageRating = 0;
           });
           this.setState({searchResults: result})
         }
