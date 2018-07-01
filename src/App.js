@@ -1,96 +1,131 @@
-import React from 'react'
-import * as BooksAPI from './BooksAPI'
-import './App.css'
-import ListShelves from './ListShelves'
-import SearchBooks from './SearchBooks'
-import { Route } from 'react-router-dom'
+import React from "react";
+import * as BooksAPI from "./BooksAPI";
+import "./App.css";
+import ListShelves from "./components/ListShelves";
+import SearchBooks from "./components/SearchBooks";
+import { Route } from "react-router-dom";
 
+/**
+ * @description renders the main component
+ */
 class BooksApp extends React.Component {
   state = {
-    /**
-     * TODO: Instead of using this state variable to keep track of which page
-     * we're on, use the URL in the browser's address bar. This will ensure that
-     * users can use the browser's back and forward buttons to navigate between
-     * pages, as well as provide a good URL they can bookmark and share.
-     */
-     books: [],
-     searchResults: [],
-     loading: true
-  }
+    books: [],
+    searchResults: [],
+    loading: true
+  };
 
+  /**
+   * @description invoked immediately after the component is mounted
+   */
   componentDidMount() {
-    BooksAPI.getAll().then((books) => {
-
-      books.forEach(obj =>{
-      if(obj.averageRating===undefined)
-        obj.averageRating = 0; 
+    BooksAPI.getAll().then(books => {
+      books.forEach(obj => {
+        if (obj.averageRating === undefined) obj.averageRating = 0;
       });
 
-      this.setState({ books })
+      this.setState({ books });
       this.setState({ loading: false });
-    })
+    });
   }
 
-  
-
-  updateBookShelf = (id,shelf) => {
+  /**
+   * @description update the evaluation with the user's own rating
+   * @param {integer} id - The id of the book
+   * @param {integer} rating - The rating of the book
+   */
+  updateBookRating = (id, rating) => {
     this.setState({ loading: true });
-    BooksAPI.get(id).then((book)=>{
-      BooksAPI.update(book, shelf).then(() => {
-        book.shelf = shelf;
+    BooksAPI.get(id)
+      .then(book => {
+        book.averageRating = rating;
         this.setState(state => ({
           books: state.books.filter(b => b.id !== book.id).concat([book])
-        }))
-        this.setState(state => ({
-          searchResults: state.searchResults.filter((b) => b.id !== book.id)
-        }))
-      });
-    }).then(() => this.setState({ loading: false }))
-  }
-  
-  getSearchResults = (query) =>{
-    BooksAPI.search(query).then((result) => {
-      if(result!==undefined){
-        if(!result.error){
-          result.forEach(obj =>{
-            obj.shelf = 'none';
-            if(obj.averageRating===undefined)
-              obj.averageRating = 0;
-          });
-          this.setState({searchResults: result})
-        }
-        else{
-          this.setState({searchResults: [] });
-        }
-      }
-      else{
-        this.setState({searchResults: [] })
-      }
-    }).catch(this.setState({searchResults: [] }));
-  }
+        }));
+      })
+      .then(() => this.setState({ loading: false }));
+  };
 
+  /**
+   * @description transfers a book from one shelf to another
+   * @param {integer} id - The id of the book
+   * @param {integer} string - The next shelf of the book
+   */
+  updateBookShelf = (id, shelf) => {
+    this.setState({ loading: true });
+    BooksAPI.get(id)
+      .then(book => {
+        BooksAPI.update(book, shelf).then(() => {
+          book.shelf = shelf;
+          this.setState(state => ({
+            books: state.books.filter(b => b.id !== book.id).concat([book])
+          }));
+          this.setState(state => ({
+            searchResults: state.searchResults.filter(b => b.id !== book.id)
+          }));
+        });
+      })
+      .then(() => this.setState({ loading: false }));
+  };
 
+  /**
+   * @description transfers a book from one shelf to another
+   * @param {string} query - The search text
+   */
+
+  getSearchResults = query => {
+    BooksAPI.search(query)
+      .then(result => {
+        if (result !== undefined) {
+          if (!result.error) {
+            result.forEach(obj => {
+              obj.shelf = "none";
+              if (obj.averageRating === undefined) obj.averageRating = 0;
+            });
+            this.setState({ searchResults: result });
+          } else {
+            this.setState({ searchResults: [] });
+          }
+        } else {
+          this.setState({ searchResults: [] });
+        }
+      })
+      .catch(this.setState({ searchResults: [] }));
+  };
+
+  /**
+   * @description renders the component
+   * @returns jsx containing the component/routes
+   */
   render() {
     return (
       <div className="app">
-        <Route exact path='/' render={() => (
+        <Route
+          exact
+          path="/"
+          render={() => (
             <ListShelves
               books={this.state.books}
               onChangeBookShelf={this.updateBookShelf}
+              onChangeBookRating={this.updateBookRating}
               loading={this.state.loading}
             />
-          )}/>
-        <Route path='/search' render={() => (
+          )}
+        />
+        <Route
+          path="/search"
+          render={() => (
             <SearchBooks
               onSearch={this.getSearchResults}
               searchResults={this.state.searchResults}
               onChangeBookShelf={this.updateBookShelf}
               loading={this.state.loading}
             />
-        )}/>
+          )}
+        />
       </div>
-    )
+    );
   }
 }
 
-export default BooksApp
+export default BooksApp;

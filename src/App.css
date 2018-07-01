@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Sacramento');
+
 html, body, .root {
   height: 100%;
 }
@@ -5,20 +7,22 @@ body {
   line-height: 1.5;
 }
 body, .app {
-  background: white;
+  background:   #F5FFFA;
 }
 
 /* main page */
 
 .list-books-title {
   padding: 10px 0;
-  background: #2e7c31;
+  background: #FFE4B5;
   text-align: center;
 }
 .list-books-title h1 {
-  font-weight: 400;
+  font-weight: 500;
+  font-size: 42px;
   margin: 0;
-  color: white;
+  color: black;
+  font-family: 'Sacramento', cursive;
 }
 
 .list-books-content {
@@ -38,6 +42,8 @@ body, .app {
 
 .bookshelf-title {
   border-bottom: 1px solid #dedede;
+  font-size: 32px;
+  font-family: 'Sacramento', cursive;
 }
 .bookshelf-books {
   text-align: center;
@@ -75,7 +81,7 @@ body, .app {
 }
 .search-books-input-wrapper {
   flex: 1;
-  background: #e9e;
+  background: #FFE4B5;
 }
 .search-books-bar input {
   width: 100%;
@@ -171,8 +177,4 @@ body, .app {
   padding: 20px 10px 0;
   text-align: center;
   font-size: 0.8em;
-}
-
-.star{
-  fontSize: 24
 }
