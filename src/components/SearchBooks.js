@@ -16,7 +16,7 @@ import PropTypes from "prop-types";
 class SearchBooks extends React.Component {
   static propTypes = {
     books: PropTypes.array.isRequired,
-    loading: PropTypes.func.isRequired
+    loading: PropTypes.bool.isRequired
   };
 
   state = {
@@ -41,6 +41,7 @@ class SearchBooks extends React.Component {
   render() {
     const books = this.props.searchResults;
     const loading = this.props.loading;
+    
     return (
       <LoadingScreen
         loading={loading}
@@ -65,7 +66,7 @@ class SearchBooks extends React.Component {
 
           <div className="search-books-results">
             <ol className="books-grid">
-              {books.map(book => (
+              {this.state.query!== "" && books.map(book => (
                 <li key={book.id}>
                   <BookInfo
                     book={book}

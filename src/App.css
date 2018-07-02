@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css?family=Sacramento');
+@import url('https://fonts.googleapis.com/css?family=Amatic+SC');
 
 html, body, .root {
   height: 100%;
@@ -8,6 +9,18 @@ body {
 }
 body, .app {
   background:   #F5FFFA;
+}
+
+.modal-title{
+  font-weight: 500;
+  font-size: 52px;
+  margin: 0;
+  color: black !important;
+  font-family: 'Amatic SC', cursive;
+  background: #FFE4B5;
+  margin-bottom: 10px;
+  margin-top: 5px;
+  padding:5px;
 }
 
 /* main page */
@@ -177,4 +190,78 @@ body, .app {
   padding: 20px 10px 0;
   text-align: center;
   font-size: 0.8em;
+}
+
+.btn-close{
+
+}
+
+.btn-close{
+    float:right;
+    margin-top:-18px;
+    margin-right:-18px;
+    cursor:pointer;
+    color: #F5FFFA;
+    border: 0px;
+    border-radius: 35px;
+    background: #999999;
+    font-size: 30px;
+    font-weight: bold;
+    display: inline-block;
+    line-height: 0px;
+    padding: 11px 3px;       
+}
+
+.btn-close:before {
+    content: "×";
+}
+
+.btn-show-modal{
+    float:left;
+    margin-top:-15px;
+    margin-right:-18px;
+    cursor:pointer;
+    color: #F5FFFA;
+    border: 0px;
+    border-radius: 50%;
+    color: #F5FFFA;
+    font-size: 15px;
+    width: 20px;
+    height: 20px;
+    background: #60ac5d;
+    font-weight: bold;
+    display: inline-block;
+    line-height: 0px;
+    padding-bottom: 7px;
+    padding-left: 4px;   
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+.btn-show-modal:before {
+    content: "...";
+}
+
+.book-modal-open {
+  right: 0;
+  margin-bottom: -15px;
+  width: 20px;
+  height: 20px;
+  border-radius: 30%;
+  font-size: 15px;
+  cursor:pointer;
+    font-weight: bold;
+  background: #60ac5d;
+  color: #F5FFFA;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 20px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+.book-modal-open:before {
+    content: "...";
+}
+
+.modal{
+  margin-top:50px;
 }

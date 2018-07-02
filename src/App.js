@@ -78,8 +78,15 @@ class BooksApp extends React.Component {
       .then(result => {
         if (result !== undefined) {
           if (!result.error) {
-            result.forEach(obj => {
-              obj.shelf = "none";
+            result.map(obj => {
+              obj.shelf = this.state.books
+                .filter(b => b.id === obj.id)
+                .map(b => (b.id === obj.id ? b.shelf : "none"))[0];
+              obj.averageRating = this.state.books
+                .filter(b => b.id === obj.id)
+                .map(b => (b.id === obj.id ? b.averageRating : 0))[0];
+
+              if (obj.shelf === undefined) obj.shelf = "none";
               if (obj.averageRating === undefined) obj.averageRating = 0;
             });
             this.setState({ searchResults: result });
